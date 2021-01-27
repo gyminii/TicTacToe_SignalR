@@ -1,0 +1,79 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <title>Tic Tac Toe</title>
+
+    <!-- Bootstrap -->
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/index.css" rel="stylesheet" />
+    <!-- 합쳐지고 최소화된 최신 CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+    <!-- 부가적인 테마 -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+
+    <!-- 합쳐지고 최소화된 최신 자바스크립트 -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+    <script id="board-template" type="text/x-handlebars-template">
+        {{debug}}
+        <table>
+            <tbody>
+@*                <tr>
+                    <td id="pos-{{@@../index}}-{{@@index}}">{{this}}</td>
+                    <td>{{this}}</td>
+                    <td>{{this}}</td>
+                </tr>
+                <tr>
+                    <td>{{this}}</td>
+                    <td>{{this}}</td>
+                    <td>{{this}}</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>8</td>
+                    <td>9</td>
+                </tr>*@
+                {{#each Pieces}}
+                <tr>
+                    {{#each this}}
+                    <td id="pos-{{@@../index}}-{{@@index}}">{{this}}</td>
+                    {{/each}}
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </script>
+
+    <main class="container text-center">
+        <h1>Welcome to Tic Tac Toe! </h1>
+
+        <div class="form-group">
+            <div class="form-group" id="usernameGroup">
+                <label class="sr-only control-label" for="username">Username</label>
+                <input type="text" class="form-control" id="username" placeholder="Username" autofocus />
+            </div>
+            <button type="submit" id="findGame" class="btn btn-outline-primary">Find Game</button>
+            <p id="status" class="help-block"></p>
+        </div>
+        <hr />
+        <div id="board"></div>
+    </main>
+
+    <script src="~/Scripts/jquery-1.9.1.js"></script>
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/handlebars.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.2.0.js"></script>
+    <script src="~/signalr/hubs"></script>
+
+
+    <script src="~/Scripts/index.js"></script>
+</body>
+</html>
