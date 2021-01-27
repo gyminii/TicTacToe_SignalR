@@ -6,9 +6,7 @@ using System.Threading.Tasks;
 
 namespace TicTacToe.Server.Models
 {
-    /// <summary>
-    /// Represents a user playing the game.
-    /// </summary>
+    // Player
     public class Player
     {
         public Player(string name, string id)
@@ -17,26 +15,12 @@ namespace TicTacToe.Server.Models
             this.Id = id;
         }
 
-        /// <summary>
-        /// A user defined username to display as a friendly name.
-        /// </summary>
         public string Name { get; private set; }
 
-        /// <summary>
-        /// A unique ID to identify a player. Use the SignalR connection ID.
-        /// </summary>
         public string Id { get; private set; }
 
-        /// <summary>
-        /// The unique ID to identify the game a player is playing; otherwise null.
-        /// The game will decide the game ID.
-        /// </summary>
         public string GameId { get; set; }
 
-        /// <summary>
-        /// Defines the piece that will be placed on the board to represent this user.
-        /// The game will decide the game piece.
-        /// </summary>
         public string Piece { get; set; }
 
         public override string ToString()
@@ -55,11 +39,6 @@ namespace TicTacToe.Server.Models
             }
 
             return this.Id.Equals(other.Id) && this.Name.Equals(other.Name);
-        }
-
-        public override int GetHashCode()
-        {
-            return this.Id.GetHashCode() * this.Name.GetHashCode();
         }
     }
 }

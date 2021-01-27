@@ -10,36 +10,15 @@ using TicTacToe.Server.Models;
 
 namespace TicTacToe.Server
 {
-    /// <summary>
-    /// This class can statically persist a collection of players and
-    /// matches that each of the players are playing using the singleton pattern.
-    /// The singleton pattern restricts the instantiation of the class to one object.
-    /// </summary>
+    // Game server
     public class GameState
     {
-        /// <summary>
-        /// Singleton instance that defers initialization until access time.
-        /// </summary>
-        private readonly static Lazy<GameState> instance =
-            new Lazy<GameState>(() => new GameState(GlobalHost.ConnectionManager.GetHubContext<GameHub>()));
+        private readonly static Lazy<GameState> instance = new Lazy<GameState>(() => new GameState(GlobalHost.ConnectionManager.GetHubContext<GameHub>()));
 
-        /// <summary>
-        /// A reference to all players. Key is the unique ID of the player.
-        /// Note that this collection is concurrent to handle multiple threads.
-        /// </summary>
-        private readonly ConcurrentDictionary<string, Player> players =
-            new ConcurrentDictionary<string, Player>(StringComparer.OrdinalIgnoreCase);
+        private readonly ConcurrentDictionary<string, Player> players = new ConcurrentDictionary<string, Player>(StringComparer.OrdinalIgnoreCase);
 
-        /// <summary>
-        /// A reference to all games. Key is the group name of the game.
-        /// Note that this collection uses a concurrent dictionary to handle multiple threads.
-        /// </summary>
-        private readonly ConcurrentDictionary<string, Game> games =
-            new ConcurrentDictionary<string, Game>(StringComparer.OrdinalIgnoreCase);
+        private readonly ConcurrentDictionary<string, Game> games = new ConcurrentDictionary<string, Game>(StringComparer.OrdinalIgnoreCase);
 
-        /// <summary>
-        /// A queue of players that are waiting for an opponent.
-        /// </summary>
         private readonly ConcurrentQueue<Player> waitingPlayers =
             new ConcurrentQueue<Player>();
 
@@ -66,11 +45,8 @@ namespace TicTacToe.Server
             return player;
         }
 
-        /// <summary>
-        /// Retrieves the player that has the given ID.
-        /// </summary>
-        /// <param name="playerId">The unique identifier of the player to find.</param>
-        /// <returns>The found player; otherwise null.</returns>
+
+        // Return player
         public Player GetPlayer(string playerId)
         {
             Player foundPlayer;
@@ -82,12 +58,7 @@ namespace TicTacToe.Server
             return foundPlayer;
         }
 
-        /// <summary>
-        /// Retrieves the game that the given player is playing in.
-        /// </summary>
-        /// <param name="playerId">The player in the game.</param>
-        /// <param name="opponent">The opponent of the player if there is one; otherwise null.</param>
-        /// <returns>The game that the specified player is a member of if game is found; otherwise null.</returns>
+        // Return Current game.
         public Game GetGame(Player player, out Player opponent)
         {
             opponent = null;
@@ -104,11 +75,7 @@ namespace TicTacToe.Server
 
             return foundGame;
         }
-
-        /// <summary>
-        /// Retrieves a game waiting for players.
-        /// </summary>
-        /// <returns>Returns a pending game if any; otherwise returns null.</returns>
+        // Game waiting
         public Player GetWaitingOpponent()
         {
             Player foundPlayer;
@@ -120,12 +87,7 @@ namespace TicTacToe.Server
             return foundPlayer;
         }
 
-        /// <summary>
-        /// Forgets the specified game. Use if the game is over.
-        /// No need to manually remove a user from a group when the connection ends.
-        /// </summary>
-        /// <param name="gameId">The unique identifier of the game.</param>
-        /// <returns>A task to track the asynchronous method execution.</returns>
+        // If game is over
         public void RemoveGame(string gameId)
         {
             // Remove the game
@@ -141,30 +103,19 @@ namespace TicTacToe.Server
             this.players.TryRemove(foundGame.Player2.Id, out foundPlayer);
         }
 
-        /// <summary>
-        /// Adds specified player to the waiting pool.
-        /// </summary>
-        /// <param name="player">The player to add to waiting pool.</param>
+        // if one player is not present, wait for another
         public void AddToWaitingPool(Player player)
         {
             this.waitingPlayers.Enqueue(player);
         }
 
-        /// <summary>
-        /// Determines if the username is already taken, ignoring case.
-        /// </summary>
-        /// <param name="username">The username to check.</param>
-        /// <returns>true if another player shares the same username; otherwise false.</returns>
+        // Checks for duplicate name
         public bool IsUsernameTaken(string username)
         {
             return this.players.Values.FirstOrDefault(player => player.Name.Equals(username, StringComparison.InvariantCultureIgnoreCase)) != null;
         }
 
-        /// <summary>
-        /// Creates a new pending game which will be waiting for more players.
-        /// </summary>
-        /// <param name="joiningPlayer">The first player to enter the game.</param>
-        /// <returns>The newly created game in a pending state.</returns>
+        // create game
         public async Task<Game> CreateGame(Player firstPlayer, Player secondPlayer)
         {
             // Define the new game and add to waiting pool

@@ -6,33 +6,19 @@ using System.Threading.Tasks;
 
 namespace TicTacToe.Server.Models
 {
-    /// <summary>
-    /// Represents a Tic-Tac-Toe board and where players have placed their pieces.
-    /// </summary>
+    // Board Class
     public class Board
     {
-        /// <summary>
-        /// The number of pieces that have been placed on the board.
-        /// </summary>
         private int totalPiecesPlaced;
 
         public Board()
         {
-            // TODO: Make the dimensions of the board constants
             this.Pieces = new string[3, 3];
         }
 
-        /// <summary>
-        /// Represents the pieces on the board.
-        /// Must be publicly accessible to allow serialization.
-        /// </summary>
         public string[,] Pieces { get; private set; }
 
 
-        /// <summary>
-        /// Determines whether there are three pieces in a row that match.
-        /// Possible configurations are either horizontal, vertical, or the diagonals.
-        /// </summary>
         public bool IsThreeInRow
         {
             get
@@ -79,9 +65,7 @@ namespace TicTacToe.Server.Models
             }
         }
 
-        /// <summary>
-        /// Returns whether there are any positions left on the board.
-        /// </summary>
+        /// Checks for blank spaces
         public bool AreSpacesLeft
         {
             get
